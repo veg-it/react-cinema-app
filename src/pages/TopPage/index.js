@@ -1,7 +1,11 @@
+import TitleText from '../../components/Main/TitleText'
+
 const TopPage = () => {
-    return (
-        <div>Hello</div>
-    )
+  return (
+    <>
+      <TitleText title={'Топ 10 фільмів'} haveSearch={false} inline={false} />
+    </>
+  )
 }
 
 export default TopPage

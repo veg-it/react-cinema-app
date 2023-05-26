@@ -1,6 +1,6 @@
-const SearchBar = () => {
+const SearchBar = ({value, onChange}) => {
   return (
-    <div class="relative items-center content-center flex">
+    <div class="relative items-center content-center flex w-64 md:w-96">
       <span class="text-gray-400 absolute left-4 cursor-pointer">
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -17,8 +17,10 @@ const SearchBar = () => {
       </span>
       <input
         type="text"
-        class="text-xs ring-1 bg-transparent ring-gray-200 dark:ring-zinc-600 focus:ring-red-300 pl-10 pr-5 text-gray-600 dark:text-white  py-3 rounded-full w-full outline-none focus:ring-1"
-        placeholder="Search ..."
+        class="text-xs ring-1 bg-transparent bg-white ring-gray-200 dark:ring-zinc-600 focus:ring-red-300 pl-10 md:pr-5 md:py-3  pr-3 py-2 text-gray-600 dark:text-white  rounded-full w-full outline-none focus:ring-1"
+        placeholder="Пошук ..."
+        value={value}
+        onChange={onChange}
       />
     </div>
   )

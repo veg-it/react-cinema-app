@@ -1,51 +1,117 @@
-// import SearchBar from '../../components/Main/SearchBar'
-// import SubtitleText from '../../components/Main/SubtitleText'
-// import GenreBadge from '../../components/MovieComponents/GenreBadge'
-// import MovieCard from '../../components/MovieComponents/MovieCard'
-// import Input from '../../components/Main/Input'
-// import MethodAbout from '../../components/ApiComponents/ApiMethodBody'
-// import SubHeader from '../../components/ApiComponents/ApiMethodTitle'
-// import CodeBlock from '../../components/ApiComponents/ApiCodeBlock'
+import React, { useEffect, useState, useRef, useCallback } from 'react';
+import { getMovies, searchMovies, getGenres } from '../../api/movieDB';
+import TitleText from '../../components/Main/TitleText';
+import GenreBadge from '../../components/MovieComponents/GenreBadge';
+import MovieCard from '../../components/MovieComponents/MovieCard';
 
 const MainPage = () => {
+  const [movies, setMovies] = useState([]);
+  const [genres, setGenres] = useState([]);
+  const [selectedGenres, setSelectedGenres] = useState([]);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [page, setPage] = useState(1);
+  const [loading, setLoading] = useState(true);
+  const observer = useRef();
+
+  const lastMovieElementRef = useCallback(
+    (node) => {
+      if (loading) return;
+      if (observer.current) observer.current.disconnect();
+      observer.current = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting) {
+          setPage((prevPageNumber) => prevPageNumber + 1);
+        }
+      });
+      if (node) observer.current.observe(node);
+    },
+    [loading]
+  );
+
+  useEffect(() => {
+    const fetchGenres = async () => {
+      const data = await getGenres();
+      setGenres(data);
+    }
+    fetchGenres();
+  }, []);
+
+  useEffect(() => {
+    let cancel = false;
+    const fetchData = async () => {
+      setLoading(true);
+      let data = await getMovies(page);
+      if (selectedGenres.length > 0) {
+        data = data.filter((movie) => movie.genre_ids.some((id) => selectedGenres.includes(id)));
+      }
+      if (!cancel) {
+        setMovies((prevMovies) => [...prevMovies, ...data]);
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+
+    return () => {
+      cancel = true;
+    };
+  }, [page, selectedGenres]);
+
+  const handleSearch = async (event) => {
+    setSearchQuery(event.target.value);
+
+    if (event.target.value !== '') {
+      const data = await searchMovies(event.target.value);
+      setMovies([]);
+      setMovies(data);
+      setPage(1);
+    } else {
+      const data = await getMovies(page);
+      setMovies(data);
+      setPage(1);
+    }
+  };
+
+  const handleGenreClick = (id) => {
+    setSelectedGenres((prev) => {
+      return prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id];
+    });
+  };
+
   return (
     <>
-      <div>Перегляд компонентів</div>
-{/* 
-      <SubtitleText title={'Пошукова строка'} />
-      <SearchBar />
+      <TitleText
+        title={'Пошук фільмів'}
+        haveSearch={true}
+        inline={true}
+        value={searchQuery}
+        onChange={handleSearch}
+      />
 
-      <SubtitleText title={'Бейдж жанру'} />
-      <GenreBadge title={'Дослідницький'} />
+      <div className="px-4 md:px-8 lg:px-16 transition-all pb-4 md:pt-8">
+        <div className="flex gap-2 w-full overflow-scroll no-scrollbar">
+          {genres.map((genre) => (
+            <GenreBadge
+              key={genre.id}
+              title={genre.name}
+              onClick={() => handleGenreClick(genre.id)}
+              selected={selectedGenres.includes(genre.id)}
+            />
+          ))}
+        </div>
 
-      <SubtitleText title={'Карточка Фільму'} />
-      <MovieCard />
-
-      <SubtitleText title={'Основний текст'} />
-      <SubtitleText title={'Строка для вводу'} />
-      <Input />
-
-      <SubtitleText title={'Заголовок сторінки'} />
-
-      <SubtitleText title={'Заголовок методу апі'} />
-      <SubHeader title={"/api/get"} />
-          
-      <SubtitleText title={'Текст методу апі'} />
-      <MethodAbout text={"Опис блоку коду з API"} />
-
-      <SubtitleText title={'Блок коду апі'} />
-      <CodeBlock code={"https://api.url/api/get"} title={'Request'} />
-
-      <SubtitleText title={'Плейліст модальне вікно'} />
-      <SubtitleText title={'Карточка збереженого фільму'} />
-      <SubtitleText title={'Карточка плейлисту'} />
-
-      <SubtitleText title={'Карточка афіши'} />
-      <SubtitleText title={'Таблиця афіши'} />
-
-      <SubtitleText title={'Карточка топ листа'} /> */}
+        <div className="mt-4 text-gray-400 text-xs space-y-3 flex gap-3 flex-wrap justify-between">
+          {movies.map((movie, index) => {
+            if (movies.length === index + 1) {
+              return <MovieCard movie={movie} lastElementRef={lastMovieElementRef} genres={genres} />
+            } else {
+              return <MovieCard movie={movie} genres={genres} />
+            }
+          })}
+        </div>
+        <div>{loading && 'Loading...'}</div>
+      </div>
     </>
-  )
+  );
 }
 
-export default MainPage
+export default MainPage;

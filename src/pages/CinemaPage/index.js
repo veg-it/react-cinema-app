@@ -1,24 +1,10 @@
+import TitleText from '../../components/Main/TitleText'
 const CinemaPage = () => {
   return (
     <div>
+      <TitleText title={'Афіша кінотеатрів'} />
       <section>
-        <nav class="flex space-x-6 text-gray-400 font-medium">
-          <a href="#" class="hover:text-gray-700 dark:hover:text-white">
-            TV Series
-          </a>
-          <a href="#" class="text-gray-700 dark:text-white font-semibold">
-            Movies
-          </a>
-          <a href="#" class="hover:text-gray-700 dark:hover:text-white ">
-            Animes
-          </a>
-        </nav>
 
-        <div
-          class="flex flex-col justify-between mt-4 bg-black/10 bg-blend-multiply rounded-3xl h-80 overflow-hidden bg-cover bg-center px-7 pt-4 pb-6 text-white"
-          style={{ backgroundImage: "url('images/inception.jpg');" }}>
-          {/* <!-- <img class="object-cover w-full h-full" src="images/inception.jpg" alt=""/> --> */}
-        </div>
       </section>
       <h2>Cьогодні в кіно</h2>
       <div>

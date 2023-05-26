@@ -17,12 +17,28 @@ class Event(db.Model):
     time = db.Column(db.Time)
     ticket_price = db.Column(db.Float)
     date = db.Column(db.Date)
+    def serialize(self):
+        return {
+            'id': self.id,
+            'movie_id': self.movie_id,
+            'cinema_id': self.cinema_id,
+            'time': self.time.strftime('%H:%M'),
+            'ticket_price': self.ticket_price,
+            'date': self.date.strftime('%Y-%m-%d')
+        }
 
 class Cinema(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100))
     city = db.Column(db.String(100))
     address = db.Column(db.String(200))
+    def serialize(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'city': self.city,
+            'address': self.address
+        }
 
 class Actor(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -32,10 +48,25 @@ class Actor(db.Model):
     birthyear = db.Column(db.Integer)
     bio = db.Column(db.Text)
     img = db.Column(db.Text)
+    def serialize(self):
+        return {
+            'id': self.id,
+            'lastname': self.lastname,
+            'firstname': self.firstname,
+            'middlename': self.middlename,
+            'birthyear': self.birthyear,
+            'bio': self.bio,
+            'img': self.img
+        }
 
 class Genre(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100))
+    def serialize(self):
+        return {
+            'id': self.id,
+            'name': self.name
+        }
 
 class Movie(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -46,6 +77,17 @@ class Movie(db.Model):
     title = db.Column(db.String(100))
     overview = db.Column(db.Text)
     rating = db.Column(db.Float)
+    def serialize(self):
+        return {
+            'id': self.id,
+            'adult': self.adult,
+            'img': self.img,
+            'video_url': self.video_url,
+            'actors': self.actors,
+            'title': self.title,
+            'overview': self.overview,
+            'rating': self.rating
+        }
 
 class Watchlist(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -53,6 +95,14 @@ class Watchlist(db.Model):
     movie_ids = db.Column(ARRAY(db.Integer))
     login = db.Column(db.String(100))
     password = db.Column(db.String(100))
+    def serialize(self):
+        return {
+            'id': self.id,
+            'user_id': self.user_id,
+            'movie_ids': self.movie_ids,
+            'login': self.login,
+            'password': self.password
+        }
 
 admin = Admin(app, name='myapp', template_mode='bootstrap3')
 admin.add_view(ModelView(Event, db.session))
@@ -145,6 +195,7 @@ def remove_movie_from_watchlist(id):
     watchlist.movie_ids.remove(data['movie_id'])
     db.session.commit()
     return jsonify(watchlist.serialize())
+
 
 
 if __name__ == '__main__':

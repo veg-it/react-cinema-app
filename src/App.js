@@ -7,18 +7,25 @@ import MainPage from "./pages/MainPage";
 import LikedFilmsPage from "./pages/LikedFilmsPage";
 import LikedFilmPage from "./pages/LikedFilmPage";
 import TopPage from "./pages/TopPage";
+import MoviePage from "./pages/MoviePage";
+import ActorsPage from "./pages/ActorsPage";
+import ActorPage from "./pages/ActorPage";
 
 
 const App = () => {
   return (
     <RootLayout>
       <Routes>
-        <Route path="/" element={<DocumentationPage />} />
-        <Route path="/top" element={<MainPage />} />
-        <Route path="/cinemas" element={<MainPage />} />
-        <Route path="/wishlists" element={<MainPage />} />
-        <Route path="/wishlists/:bID" element={<MainPage />} />
-        <Route path="/api/:aID" element={<MainPage />} />
+        <Route path="/" element={<MainPage />} />
+        <Route path="/top" element={<TopPage />} />
+        <Route path="/cinemas" element={<CinemaPage />} />
+        <Route path="/wishlists" element={<LikedFilmsPage />} />
+        <Route path="/wishlists/:create" element={<LikedFilmsPage />} />
+        <Route path="/wishlist/:bID" element={<LikedFilmPage />} />
+        <Route path="/api" element={<DocumentationPage />} />
+        <Route path="/movie/:aID" element={<MoviePage />} />
+        <Route path="/actors" element={<ActorsPage />} />
+        <Route path="/actor/:cID" element={<ActorPage />} />
       </Routes>
     </RootLayout>
   );
