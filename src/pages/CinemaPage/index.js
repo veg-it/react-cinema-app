@@ -1,97 +1,50 @@
+/* eslint-disable */
 import TitleText from '../../components/Main/TitleText'
+import MovieCard from '../../components/MovieComponents/MovieCard'
+import { getTopMovies, getGenres } from '../../api/movieDB'
+import ScheduleTable from '../../components/ScheduleComponents/ScheduleTable'
+import { useState, useEffect } from 'react'
+
 const CinemaPage = () => {
+  const [movies, setMovies] = useState([])
+  const [genres, setGenres] = useState([])
+
+  useEffect(() => {
+    const fetchGenres = async () => {
+      const data = await getGenres()
+      setGenres(data)
+    }
+    fetchGenres()
+  }, [])
+
+  useEffect(() => {
+    const fetchData = async () => {
+      let data = await getTopMovies()
+      data = data.slice(15, 20)
+      setMovies(data)
+    }
+
+    fetchData()
+  }, [])
   return (
     <div>
       <TitleText title={'Афіша кінотеатрів'} />
-      <section>
-
-      </section>
-      <h2>Cьогодні в кіно</h2>
-      <div>
-        <ul class="mt-4 text-gray-400 text-xs space-y-3">
-          <li class="flex space-x-3 flex-col md:flex-row">
-            <span class="text-gray-700 dark:text-white font-semibold ">
-              The Matrix
-            </span>
-            <img
-              src="https://upload.wikimedia.org/wikipedia/en/c/c1/The_Matrix_Poster.jpg"
-              class="object-cover w-1/3 rounded-md"
-              alt=""
-              style={{
-                width: 165,
-                height: 250,
-              }}
-            />
-            <div class="flex flex-col justify-between  ">
-              <div class="flex flex-col space-y-1">
-                <span class="text-xxs hidden xl:block">Action, Sci-Fi</span>
+      <section></section>
+      
+      <div className="px-4 md:px-8 lg:px-8 xl:px-16 transition-all pb-4 md:pt-8">
+      <h2 className='text-2xl text-gray-500 mb-3'>Cьогодні в кіно</h2>
+        <div className="mt-4 text-gray-400 text-xs space-y-3 gap-3 md:gap-2">
+          {movies.map((movie, index) => (
+            <div key={index} className="mb-11 lg:flex justify-between items-center">
+              <div className="flex items-center gap-10">
+                <MovieCard movie={movie} genres={genres} />
               </div>
-              <div class="mt-4 -mb-3">
-                <div class="not-prose relative bg-slate-50 rounded-xl overflow-hidden dark:bg-slate-800/25">
-                  <div
-                    style={{ backgroundPosition: '10px 10px' }}
-                    class="absolute inset-0 bg-grid-slate-100 [mask-image:linear-gradient(0deg,#fff,rgba(255,255,255,0.6))] dark:bg-grid-slate-700/25 dark:[mask-image:linear-gradient(0deg,rgba(255,255,255,0.1),rgba(255,255,255,0.5))]"></div>
-                  <div class="relative rounded-xl overflow-auto">
-                    <div class="shadow-sm overflow-hidden mt-4">
-                      <table class="border-collapse table-fixed w-full text-xs">
-                        <thead>
-                          <tr>
-                            <th class="border-b dark:border-slate-600 font-medium p-4 pl-8 pt-0 pb-3 text-slate-400 dark:text-slate-200 text-left">
-                              Де
-                            </th>
-                            <th class="border-b dark:border-slate-600 font-medium p-4 pt-0 pb-3 text-slate-400 dark:text-slate-200 text-left">
-                              Час
-                            </th>
-                            <th class="border-b dark:border-slate-600 font-medium p-4 pr-8 pt-0 pb-3 text-slate-400 dark:text-slate-200 text-left">
-                              Ціна
-                            </th>
-                          </tr>
-                        </thead>
-                        <tbody class="bg-white dark:bg-slate-800">
-                          <tr>
-                            <td class="border-b border-slate-100 dark:border-slate-700 p-4 text-slate-500 dark:text-slate-400">
-                              Кінотеатр 1
-                            </td>
-                            <td class="border-b border-slate-100 dark:border-slate-700 p-4 text-slate-500 dark:text-slate-400">
-                              19:00
-                            </td>
-                            <td class="border-b border-slate-100 dark:border-slate-700 p-4 pr-8 text-slate-500 dark:text-slate-400">
-                              70 грн
-                            </td>
-                          </tr>
-                          <tr>
-                            <td class="border-b border-slate-100 dark:border-slate-700 p-4 pl-8 text-slate-500 dark:text-slate-400">
-                              Кінотеатр 2
-                            </td>
-                            <td class="border-b border-slate-100 dark:border-slate-700 p-4 text-slate-500 dark:text-slate-400">
-                              19:30
-                            </td>
-                            <td class="border-b border-slate-100 dark:border-slate-700 p-4 pr-8 text-slate-500 dark:text-slate-400">
-                              70 грн
-                            </td>
-                          </tr>
-                          <tr>
-                            <td class="border-b border-slate-200 dark:border-slate-600 p-4 pl-8 text-slate-500 dark:text-slate-400">
-                              Кінотеатр 3
-                            </td>
-                            <td class="border-b border-slate-200 dark:border-slate-600 p-4 text-slate-500 dark:text-slate-400">
-                              18:00
-                            </td>
-                            <td class="border-b border-slate-200 dark:border-slate-600 p-4 text-slate-500 dark:text-slate-400">
-                              70 грн
-                            </td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>
-                  <div class="absolute inset-0 pointer-events-none border border-black/5 rounded-xl dark:border-white/5"></div>
-                </div>
-              </div>
+              <ScheduleTable />
             </div>
-          </li>
-        </ul>
+          ))}
+        </div>
       </div>
+
     </div>
   )
 }

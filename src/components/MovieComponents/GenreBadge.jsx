@@ -1,12 +1,11 @@
-const GenreBadge = ({ title, onClick }) => {
-
+const GenreBadge = ({ title, onClick, selected }) => {
   return (
     <span
-      className="rounded-full px-2 py-1 text-xs text-indigo-400 font-bold  bg-indigo-100 mr-1 flex justify-center items-center"
+      className={`rounded-full text-xs font-bold mr-1 flex justify-center items-center p-1 
+                  ${selected ? "text-white bg-indigo-400" : "text-indigo-400 bg-indigo-100"}`}
       onClick={onClick}>
       {title}
     </span>
-
   )
 }
 export default GenreBadge

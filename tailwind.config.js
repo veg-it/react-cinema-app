@@ -4,11 +4,11 @@ module.exports = {
   theme: {
     extend: {
       width: {
-        150: '150px',
-        300: '300px',
+        150: '156px',
+        300: '227px',
       },
       height: {
-        150: '150px',
+        150: '156px',
         300: '227px',
       },
     },

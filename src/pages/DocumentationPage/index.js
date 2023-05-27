@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React from 'react'
 
 import TitleText from '../../components/Main/TitleText'
@@ -11,7 +12,7 @@ import { apiList } from '../../api/apiDescription'
 const DocumentationPage = () => {
   return (
     <>
-      <TitleText title={'Документація з використання API'} haveSearch={true} inline={true}/>
+      <TitleText title={'Документація з використання API'} haveSearch={false} inline={false}/>
 
       <div className="px-4 md:px-8 lg:px-16 transition-all">
         <MethodAbout

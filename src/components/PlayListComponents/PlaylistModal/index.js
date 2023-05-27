@@ -1,5 +1,6 @@
-import React from 'react'
+import React, {useState} from 'react'
 import { useForm } from 'react-hook-form'
+import { addWatchlist, authenticate } from '../../../api/index'
 
 function generateLogin() {
     const length = Math.floor(Math.random() * 3) + 6; // Generates a random number between 6 and 8
@@ -47,17 +48,48 @@ function generatePassword() {
 
 
 const Modal = ({ isOpen, handleClose, isGenerateMode, setGenerateMode }) => {
-  const { register, handleSubmit, setValue } = useForm()
+  const { register, handleSubmit, setValue, getValues } = useForm()
+  const [error, setError] = useState(null)
 
-  const onSubmit = (data) => {
-    console.log(data)
+  const onSubmit = async (data, event) => {
+    if (event) event.preventDefault();
+
+    if (isGenerateMode) {
+      try {
+        const response = await addWatchlist(data)
+        setValue('name', '')
+      } catch (err) {
+        setError('Failed to add watchlist') 
+      }
+    } else {
+      try {
+        const response = await authenticate(data)
+        if (response.error) {
+          setError(response.error)
+        } else {
+          handleClose()
+        }
+      } catch (err) {
+        setError('Failed to authenticate')
+      }
+    }
   }
+
 
   const handleGenerate = () => {
-    setValue('login', generateLogin())
-    setValue('password', generatePassword())
+    const login = generateLogin()
+    const password = generatePassword()
+    setValue('login', login)
+    setValue('password', password)
     setGenerateMode(false)
+
+    // Sending request to add watchlist after generation
+    const list_name = getValues('name')
+    if (list_name) {
+      onSubmit({ list_name, login, password })
+    }
   }
+
 
   return (
     isOpen && (
@@ -103,10 +135,12 @@ const Modal = ({ isOpen, handleClose, isGenerateMode, setGenerateMode }) => {
             ) : (
               <button
                 type="submit"
-                className="px-4 py-2 text-white bg-indigo-500 rounded">
+                className="px-4 py-2 text-white bg-indigo-500 rounded"
+                >
                 Додати
               </button>
             )}
+            {error && <p>{error}</p>}
           </form>
           <button
             onClick={handleClose}

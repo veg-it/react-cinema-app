@@ -12,9 +12,9 @@ function RootLayout({ children }) {
       <div className="md:hidden fixed w-full py-2 px-4 flex items-center gap-x-3 backdrop-blur-sm bg-opacity-80 bg-white z-10">
         <MdMenu className="h-5 w-5" onClick={toggleSidebar} />
         <div className=" font-bold text-md flex items-center gap-x-1 flex-row">
-          <TbBrandYoutubeKids className="h-5 w-5 text-red-600" />
+          <TbBrandYoutubeKids className="h-5 w-5 text-indigo-600" />
           <div className="tracking-wide dark:text-white">
-          Logo<span className="text-red-600">.</span>
+          Movie<span className="text-indigo-600">Flicks</span>
           </div>
         </div>
 

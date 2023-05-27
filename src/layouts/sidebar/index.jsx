@@ -34,7 +34,7 @@ function SideBar({ isOpen, toggleSidebar }) {
             <div className=" font-bold text-lg flex items-center gap-x-3">
                 <TbBrandYoutubeKids className="h-10 w-10 text-indigo-600" />
                 <div className="tracking-wide dark:text-white">
-                    Logo<span className="text-indigo-600">.</span>
+                Movie<span className="text-indigo-600">Flicks</span>
                 </div>
             </div>
 

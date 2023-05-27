@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { useParams } from 'react-router-dom'
 import { getMovieDetails } from '../../api/movieDB'
 import { useEffect, useState } from 'react'
@@ -8,7 +9,6 @@ const MoviePage = () => {
 
   const getMovie = async () => {
     const response = await getMovieDetails(aID)
-    console.log(response)
     setMovie(response)
   }
   useEffect(() => {
@@ -23,13 +23,12 @@ const MoviePage = () => {
           alt={movie?.title}
           className=" md:w-1/2 rounded-md w-full"
         />
-        {/* <h1>{movie.original_title}</h1> */}
         <div className='mt-3'>
-          <div className="flex gap-3 mb-3">
+          <div className="md:flex gap-3 mb-3">
             <h1 className="text-xl w-fit">{movie?.title}</h1>
-            <span className="bg-indigo-50 w-fit p-2 text-indigo-500 rounded-md text-xs">
+            <div className="bg-indigo-50 w-fit p-2 text-indigo-500 rounded-md text-xs">
               {movie?.release_date}
-            </span>
+            </div>
           </div>
           <span className="w-fit text-indigo-500 rounded-md md:text-xs text-md mb-2">
             Опис фільму:
@@ -44,7 +43,11 @@ const MoviePage = () => {
           <span className="w-fit text-indigo-500 rounded-md md:text-xs text-md mb-2">
             Жанри:
           </span>
-          <p>{movie?.adult}</p>
+          <p>{movie?.genres.map(genre => genre.name ).join(', ')}</p>
+          <span className="w-fit text-indigo-500 rounded-md md:text-xs text-md mb-2">
+            Оцінка: <span className='text-black'>{movie?.vote_average.toFixed(1)}</span>
+          </span>
+          
         </div>
       </div>
     </div>

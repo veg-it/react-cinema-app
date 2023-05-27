@@ -1,4 +1,4 @@
-export const apiLink = 'http://localhost:5000/api';
+export const apiLink = 'https://vegit.pythonanywhere.com/api';
 
 // Отримання списку всіх подій
 export async function getEvents() {
@@ -33,18 +33,6 @@ export async function getMovies() {
 // Отримання списку всіх списків перегляду
 export async function getWatchlists() {
     const response = await fetch(`${apiLink}/watchlists`);
-    return response.json();
-}
-
-// Додавання нового списку перегляду
-export async function addWatchlist(watchlist) {
-    const response = await fetch(`${apiLink}/watchlists`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(watchlist)
-    });
     return response.json();
 }
 
@@ -93,5 +81,45 @@ export async function removeMovieFromWatchlist(id, movie_id) {
         },
         body: JSON.stringify({ movie_id })
     });
+    return response.json();
+}
+
+export async function authenticate(loginpwd) {
+    const response = await fetch(`${apiLink}/auth`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(loginpwd)
+    });
+    const data = await response.json();
+    if (response.ok) {
+        localStorage.setItem('watchlist_id', data.id.toString());
+    }
+    return data;
+}
+
+
+
+// Добавление нового плейлиста
+export async function addWatchlist(watchlist) {
+    const response = await fetch(`${apiLink}/watchlists`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(watchlist)
+    });
+    const data = await response.json();
+    if (response.ok) {
+        localStorage.setItem('watchlist_id', data.id.toString());
+    }
+    return data;
+}
+
+// Получение плейлиста текущего пользователя
+export async function getCurrentUserWatchlist() {
+    const id = localStorage.getItem('watchlist_id');
+    const response = await fetch(`${apiLink}/watchlists/${id}`);
     return response.json();
 }
